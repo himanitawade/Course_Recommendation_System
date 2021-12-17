@@ -1,0 +1,5 @@
+﻿S.no,course_id,course_title,concentration,price,num_lectures,level,course_availibility,course_duration
+1,CPSC 481,Introduction to Artificial Intelligence,Artificial Intelligence,"$1,190 ",3,Beginner,Spring,4 months
+2,CPSC 483,Introduction to Machine Learning,Artificial Intelligence,"$1,190 ",2,Beginner,Spring,4 months
+3,CPSC 335,Algorithm Engineering,Artificial Intelligence,$980 ,8,Beginner,Spring,4 months
+4,CPSC 323,Compilers & Languages,Artificial Intelligence,$980 ,8,Beginner,Spring,4 months
