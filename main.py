@@ -51,22 +51,28 @@ class HomePage(MDScreen):
     
     def recommend_course(self,title,Path):
         
-        print(title)
         
         # Load our dataset
         df = pd.read_csv(Path)
         
+        df = df.dropna()
+        
+        df = df.loc[df['Concentration'] == title]
+        
+        
+        val = df['course_title'].iloc[0]
+        
         # Clean Text:stopwords,special charac
-        df['clean_course_title'] = df['course_title'].apply(nfx.remove_stopwords)
+        df['clean_course_description'] = df['course_description'].apply(nfx.remove_stopwords)
         
         
         # Clean Text:stopwords,special charac
-        df['clean_course_title'] = df['clean_course_title'].apply(nfx.remove_special_characters)
+        df['clean_course_description'] = df['clean_course_description'].apply(nfx.remove_special_characters)
         
         # Vectorize our Text
         count_vect = CountVectorizer()
         
-        cv_mat = count_vect.fit_transform(df['clean_course_title'])
+        cv_mat = count_vect.fit_transform(df['clean_course_description'])
         
         # Dense
         cv_mat = cv_mat.todense()
@@ -80,7 +86,8 @@ class HomePage(MDScreen):
         course_indices = pd.Series(df.index,index=df['course_title']).drop_duplicates()
         
         # ID for title
-        idx = course_indices[title]
+    
+        idx = course_indices[val]
         # Course Indice
         # Search inside cosine_sim_mat
         scores = list(enumerate(cosine_sim_mat[idx]))
@@ -99,20 +106,27 @@ class HomePage(MDScreen):
         rec_df['similarity_scores'] = selected_course_scores
         
         for r in rec_df:
-            #recommendation_course = rec_df['course_title'].iloc[0]
-        
             recommendation_course=rec_df['course_title'].values.tolist()
             
-        print(recommendation_course)
-            
+        recommendation = df.loc[df['course_title'].isin(recommendation_course)]
+            #print(recommendation)
+        recommendation = recommendation[['course_id','course_title','Level','course_availability','Pre requisites']]
+    
+        records = recommendation.to_records(index=False)
         
-        return (recommendation_course)
-    
-    
-    
-    def Userinterest(self,interest):
+        result = list(records)
         
-        self.Course = self.recommend_course(title=interest, Path ="/Users/himanitawade/Desktop/MS CS SEM 1/CPSC-481/Course Recommendation System/course_catalog1.csv")
+        result = result[:2]          
+        
+        return (result)
+    
+    
+    
+    def Userinterest(self,value):
+        
+        spinner_prog = ObjectProperty()
+        
+        self.Course = self.recommend_course(title= self.manager.get_screen('homepage').spinner_prog.text, Path ="/Users/himanitawade/Desktop/MS CS SEM 1/CPSC-481/Course Recommendation System/Course_catalog.csv")
         self.manager.current = "coursepage"
      
 
@@ -122,14 +136,14 @@ class CoursePage(MDScreen):
     def on_enter(self, *args):
         
         course= self.manager.get_screen('homepage').Course
-        course = list(enumerate(course))
-        print(course)
+        #course = list(enumerate(course))
+        #print(course)
     
         data_tables = MDDataTable(
             size_hint=(0.9, 0.8),
             use_pagination=True,
-            check = True,
-            column_data=[('Index',dp(30)),('Course_name',dp(100))],
+            #check = True,
+            column_data=[('Course_id',dp(20)),('Course_name',dp(30)),('Level',dp(15)),('Availability',dp(20)),('Pre requisites',dp(40))],
             row_data= course ,
         )
         self.manager.get_screen('coursepage').add_widget(data_tables)
