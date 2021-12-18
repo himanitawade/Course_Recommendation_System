@@ -6,6 +6,7 @@ PageManager:
 <HomePage>:
     name:"homepage"
     home:home
+    spinner_prog:spinner_prog
     MDCard:
         size_hint: None, None
         size: 900, 400
@@ -29,23 +30,25 @@ PageManager:
     
     MDLabel:
         id: CSU_Login
-        text: "What is your Interest?"
+        text: "What do you want as a concentration"
         font_size: 30
         halign: 'center'
         size_hint_y: None
-        pos_hint: {"center_x": 0.5, "center_y": 0.55}
+        pos_hint: {"center_x": 0.5, "center_y": 0.6}
         height: self.texture_size[0]
         padding_y: 15
 
-    MDTextFieldRound:
-        id: interest
-        hint_text: "Eg:Aritficial Intelligence,Web Devlopment,Data Engineering"
-        size_hint_x: .5
-        max_height: "200dp"
-        mode: "fill"
-        fill_color: 0, 0, 0, .4
-        multiline: True
-        pos_hint: {"center_x": 0.5, "center_y": 0.4}
+    
+    Spinner:
+        id: spinner_prog
+        text: "Select Concentration"
+        values:["Software Engineering","Cybersecurity", "Artificial Intelligence","Computer Systems","Software Development","Computer Science (Theory)","Computer Applications"]
+        pos_hint: {"center_x": 0.5, "center_y": 0.56}
+        size_hint:(None,None)
+        size: (400, 40)
+        
+        on_text: root.Userinterest(spinner_prog.text)
+        
         
     MDIconButton:
         pos_hint: {"center_x": 0.5, "center_y": 0.2}
